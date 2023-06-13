@@ -1,5 +1,7 @@
 package com.sparta.stepdefs;
 
+import com.sparta.pom.pages.HomePage;
+import com.sparta.pom.pages.ProductsPage;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
@@ -7,6 +9,7 @@ import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
@@ -19,6 +22,8 @@ public class MyStepdefs {
     private static final String DRIVER_LOCATION = "src/test/resources/chromedriver.exe";
     private static ChromeDriverService service;
     private static WebDriver webDriver;
+    private HomePage homePage;
+    private ProductsPage productsPage;
 
     public static ChromeOptions getChromeOptions() {
         ChromeOptions chromeOptions = new ChromeOptions();
@@ -46,14 +51,17 @@ public class MyStepdefs {
 
     @Given("I am on the automationexercise website homepage")
     public void iAmOnTheAutomationexerciseWebsiteHomepage() {
+        homePage = new HomePage(webDriver);
     }
 
     @When("I click products link")
     public void iClickProductsLink() {
+        productsPage = homePage.goToProductsPage();
     }
 
     @Then("I go to products page")
     public void iGoToProductsPage() {
+        Assertions.assertEquals("https://automationexercise.com/products", productsPage.getUrl());
     }
 
 
