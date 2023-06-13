@@ -6,6 +6,7 @@ import io.cucumber.java.After;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -69,14 +70,24 @@ public class MyStepdefs {
         homePage = new HomePage(webDriver);
         productsPage = homePage.goToProductsPage();
     }
-    @When("type in {string} and click search")
-    public void typeInAndClickSearch(String searchProduct) {
+    @When("I type in {string}")
+    public void iTypeIn(String searchProduct) {
         productsPage.enterSearchedProduct(searchProduct);
+    }
+
+    @And("I click search")
+    public void iClickSearch() {
+        productsPage.clickSearch();
     }
 
     @Then("I can see word {string} in the search box")
     public void iCanSeeWordInTheSearchBox(String searchedValue) {
         Assertions.assertEquals(searchedValue, productsPage.getSearchProductValue());
+    }
+
+    @Then("I am redirected to the page with searched products")
+    public void iAmRedirectedToThePageWithSearchedProducts() {
+        Assertions.assertEquals("https://automationexercise.com/products?search=women", productsPage.getUrl());
     }
 
     @After
@@ -88,6 +99,5 @@ public class MyStepdefs {
     static void teardownAll() {
         service.stop();
     }
-
 
 }
