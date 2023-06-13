@@ -5,4 +5,6 @@ Feature: As a user of 'automationexercise' website, I want to be able to search 
     Then I go to products page
 
   Scenario: Typing in the search field returns the correct results
-    Given
+    Given I am on the products page
+    When type in "women"
+    Then I can see the correct search value in search box

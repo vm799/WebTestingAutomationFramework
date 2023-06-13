@@ -64,6 +64,18 @@ public class MyStepdefs {
         Assertions.assertEquals("https://automationexercise.com/products", productsPage.getUrl());
     }
 
+    @Given("I am on the products page")
+    public void iAmOnTheProductsPage() {
+        productsPage = homePage.goToProductsPage();
+    }
+
+    @When("type in {string}")
+    public void typeIn(String arg0) {
+    }
+
+    @Then("I can see the correct search value in search box")
+    public void iCanSeeTheCorrectSearchValueInSearchBox() {
+    }
 
     @After
     void tearDown() {
