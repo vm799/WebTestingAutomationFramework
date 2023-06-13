@@ -66,15 +66,17 @@ public class MyStepdefs {
 
     @Given("I am on the products page")
     public void iAmOnTheProductsPage() {
+        homePage = new HomePage(webDriver);
         productsPage = homePage.goToProductsPage();
     }
-
-    @When("type in {string}")
-    public void typeIn(String arg0) {
+    @When("type in {string} and click search")
+    public void typeInAndClickSearch(String searchProduct) {
+        productsPage.enterSearchedProduct(searchProduct);
     }
 
-    @Then("I can see the correct search value in search box")
-    public void iCanSeeTheCorrectSearchValueInSearchBox() {
+    @Then("I can see word {string} in the search box")
+    public void iCanSeeWordInTheSearchBox(String searchedValue) {
+        Assertions.assertEquals(searchedValue, productsPage.getSearchProductValue());
     }
 
     @After
@@ -86,4 +88,6 @@ public class MyStepdefs {
     static void teardownAll() {
         service.stop();
     }
+
+
 }
