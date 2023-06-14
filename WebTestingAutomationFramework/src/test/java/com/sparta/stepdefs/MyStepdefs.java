@@ -9,7 +9,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -105,36 +104,22 @@ public class MyStepdefs {
         cartPage.clickAddToCart();
     }
 
-//    @Then("I should see the message {string}")
-//    public void iShouldSeeTheMessage(String message) {
-//        Assertions.assertEquals("Added!",cartPage.hasMessage(message));
-//    }
-
-    @Then("I should see a confirmation popup")
-    public void iShouldSeeAConfirmationPopup() {
-        Assertions.assertEquals("https://automationexercise.com/", cartPage.getUrl());
+    @Then("I should see the message {string}")
+    public void iShouldSeeTheMessage(String message) {
+        Assertions.assertEquals("Added!", cartPage.hasMessage(message));
     }
+
 
     @When("I click on the cart icon")
     public void iClickOnTheCartIcon() {
-        cartPage.clickViewCart();
-        homePage.gotToCartPage();
+        homePage = new HomePage(webDriver);
+        cartPage = homePage.gotToCartPage();
     }
 
     @Then("I should be able to see a summary of the items in my cart")
     public void iShouldBeAbleToSeeASummaryOfTheItemsInMyCart() {
         Assertions.assertEquals("https://automationexercise.com/view_cart", cartPage.getUrl());
     }
-
-//    @Given("I am on the cart page")
-//    public void iAmOnTheCartPage() {
-//        homePage = new HomePage(webDriver);
-//        cartPage = new CartPage(webDriver);
-//        cartPage.chooseProduct();
-//        cartPage.clickAddToCart();
-//        cartPage.clickViewCart();
-//        homePage.gotToCartPage();
-//    }
 
     @When("I click on the X button")
     public void iClickOnTheXButton() {
@@ -145,11 +130,6 @@ public class MyStepdefs {
     public void iWillSeeTheConfirmationThatCartIsEmpty() {
         Assertions.assertTrue(cartPage.cartEmpty());
     }
-
-//    @Then("I will see the message {string}")
-//    public void iWillSeeTheMessage(String message) {
-//        Assertions.assertTrue(cartPage.confirmRemove(message));
-//    }
 
     @When("I click on SignupLogin button")
     public void iClickOnSignupLoginButton() {
@@ -204,6 +184,7 @@ public class MyStepdefs {
         loginPage = homePage.goToLoginPage();
         Assertions.assertEquals("https://automationexercise.com/login", loginPage.getUrl());
     }
+
     @After
     void tearDown() {
         webDriver.close();
@@ -213,7 +194,5 @@ public class MyStepdefs {
     static void teardownAll() {
         service.stop();
     }
-
-
 
 }

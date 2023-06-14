@@ -45,5 +45,4 @@ public class HomePage {
         return bodyText.contains(message);
     }
 
-
 }

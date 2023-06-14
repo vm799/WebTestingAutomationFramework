@@ -3,7 +3,7 @@ Feature: As a user, Iâ€™d like to be able to remove items from my cart if I donâ
     Given I am on the automationexercise website homepage
     When I find the product I want
     And I click on the add to cart button
-    Then I should see a confirmation popup
+    Then I should see the message "Added!"
 
   Scenario: View what is in the cart
     Given I am on the automationexercise website homepage
