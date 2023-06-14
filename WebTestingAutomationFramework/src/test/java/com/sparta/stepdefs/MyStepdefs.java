@@ -104,10 +104,8 @@ public class MyStepdefs {
 
     @Then("I should see the message {string}")
     public void iShouldSeeTheMessage(String message) {
-        Assertions.assertTrue(cartPage.hasMessage(message));
+        Assertions.assertEquals("Added!",cartPage.hasMessage(message));
     }
-
-
 
 
     @When("I click on the cart icon")
