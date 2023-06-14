@@ -1,5 +1,6 @@
 package com.sparta.stepdefs;
 
+import com.sparta.pom.pages.CartPage;
 import com.sparta.pom.pages.HomePage;
 import com.sparta.pom.pages.ProductsPage;
 import io.cucumber.java.After;
@@ -25,6 +26,7 @@ public class MyStepdefs {
     private static WebDriver webDriver;
     private HomePage homePage;
     private ProductsPage productsPage;
+    private CartPage cartPage;
 
     public static ChromeOptions getChromeOptions() {
         ChromeOptions chromeOptions = new ChromeOptions();
@@ -67,8 +69,7 @@ public class MyStepdefs {
 
     @Given("I am on the products page")
     public void iAmOnTheProductsPage() {
-        homePage = new HomePage(webDriver);
-        productsPage = homePage.goToProductsPage();
+        productsPage = new HomePage(webDriver).goToProductsPage();
     }
     @When("I type in {string}")
     public void iTypeIn(String searchProduct) {
@@ -90,6 +91,52 @@ public class MyStepdefs {
         Assertions.assertEquals("https://automationexercise.com/products?search=women", productsPage.getUrl());
     }
 
+    @When("I find the product I want")
+    public void iFindTheProductIWant() {
+        cartPage = new CartPage(webDriver);
+        cartPage.chooseProduct();
+    }
+
+    @And("I click on the add to cart button")
+    public void iClickOnTheAddToCartButton() {
+        cartPage.clickAddToCart();
+    }
+
+    @Then("I should see the message {string}")
+    public void iShouldSeeTheMessage(String message) {
+        Assertions.assertTrue(cartPage.hasMessage(message));
+    }
+
+
+
+
+    @When("I click on the cart icon")
+    public void iClickOnTheCartIcon() {
+        homePage = new HomePage(webDriver);
+        cartPage = homePage.gotToCartPage();
+    }
+
+    @Then("I should be able to see a summary of the items in my cart")
+    public void iShouldBeAbleToSeeASummaryOfTheItemsInMyCart() {
+        Assertions.assertEquals("https://automationexercise.com/view_cart", cartPage.getUrl());
+    }
+
+    @Given("I am on the cart page")
+    public void iAmOnTheCartPage() {
+        cartPage = homePage.gotToCartPage();
+    }
+
+    @When("I click on the X button")
+    public void iClickOnTheXButton() {
+        cartPage.removeItem();
+    }
+
+
+    @Then("I will see the message {string}")
+    public void iWillSeeTheMessage(String message) {
+        Assertions.assertTrue(cartPage.confirmRemove(message));
+    }
+
     @After
     void tearDown() {
         webDriver.close();
@@ -99,5 +146,4 @@ public class MyStepdefs {
     static void teardownAll() {
         service.stop();
     }
-
 }
