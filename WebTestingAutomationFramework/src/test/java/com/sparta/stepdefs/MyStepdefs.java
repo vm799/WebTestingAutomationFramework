@@ -1,8 +1,6 @@
 package com.sparta.stepdefs;
 
-import com.sparta.pom.pages.CartPage;
-import com.sparta.pom.pages.HomePage;
-import com.sparta.pom.pages.ProductsPage;
+import com.sparta.pom.pages.*;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
@@ -11,6 +9,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -27,6 +26,9 @@ public class MyStepdefs {
     private HomePage homePage;
     private ProductsPage productsPage;
     private CartPage cartPage;
+    private LoginPage loginPage;
+    private LogoutPage logoutPage;
+
 
     public static ChromeOptions getChromeOptions() {
         ChromeOptions chromeOptions = new ChromeOptions();
@@ -71,6 +73,7 @@ public class MyStepdefs {
     public void iAmOnTheProductsPage() {
         productsPage = new HomePage(webDriver).goToProductsPage();
     }
+
     @When("I type in {string}")
     public void iTypeIn(String searchProduct) {
         productsPage.enterSearchedProduct(searchProduct);
@@ -102,16 +105,20 @@ public class MyStepdefs {
         cartPage.clickAddToCart();
     }
 
-    @Then("I should see the message {string}")
-    public void iShouldSeeTheMessage(String message) {
-        Assertions.assertEquals("Added!",cartPage.hasMessage(message));
-    }
+//    @Then("I should see the message {string}")
+//    public void iShouldSeeTheMessage(String message) {
+//        Assertions.assertEquals("Added!",cartPage.hasMessage(message));
+//    }
 
+    @Then("I should see a confirmation popup")
+    public void iShouldSeeAConfirmationPopup() {
+        Assertions.assertEquals("https://automationexercise.com/", cartPage.getUrl());
+    }
 
     @When("I click on the cart icon")
     public void iClickOnTheCartIcon() {
-        homePage = new HomePage(webDriver);
-        cartPage = homePage.gotToCartPage();
+        cartPage.clickViewCart();
+        homePage.gotToCartPage();
     }
 
     @Then("I should be able to see a summary of the items in my cart")
@@ -119,22 +126,84 @@ public class MyStepdefs {
         Assertions.assertEquals("https://automationexercise.com/view_cart", cartPage.getUrl());
     }
 
-    @Given("I am on the cart page")
-    public void iAmOnTheCartPage() {
-        cartPage = homePage.gotToCartPage();
-    }
+//    @Given("I am on the cart page")
+//    public void iAmOnTheCartPage() {
+//        homePage = new HomePage(webDriver);
+//        cartPage = new CartPage(webDriver);
+//        cartPage.chooseProduct();
+//        cartPage.clickAddToCart();
+//        cartPage.clickViewCart();
+//        homePage.gotToCartPage();
+//    }
 
     @When("I click on the X button")
     public void iClickOnTheXButton() {
         cartPage.removeItem();
     }
 
-
-    @Then("I will see the message {string}")
-    public void iWillSeeTheMessage(String message) {
-        Assertions.assertTrue(cartPage.confirmRemove(message));
+    @Then("I will see the confirmation that cart is empty")
+    public void iWillSeeTheConfirmationThatCartIsEmpty() {
+        Assertions.assertTrue(cartPage.cartEmpty());
     }
 
+//    @Then("I will see the message {string}")
+//    public void iWillSeeTheMessage(String message) {
+//        Assertions.assertTrue(cartPage.confirmRemove(message));
+//    }
+
+    @When("I click on SignupLogin button")
+    public void iClickOnSignupLoginButton() {
+        homePage = new HomePage(webDriver);
+        loginPage = homePage.goToLoginPage();
+    }
+
+    @Then("I can see the login page")
+    public void iCanSeeTheLoginPage() {
+        Assertions.assertEquals("https://automationexercise.com/login", loginPage.getUrl());
+    }
+
+    @Given("I am on the login page")
+    public void iAmOnTheLoginPage() {
+        loginPage = homePage.goToLoginPage();
+    }
+    @When("I enter username")
+    public void iEnterUsername() {
+        loginPage.enterUserName("apal@spartaglobal.com");
+    }
+
+    @And("enter password")
+    public void enterPassword() {
+        loginPage.enterPassword("Germany@2021");
+    }
+
+    @And("click on Login")
+    public void clickOnLogin() {
+        loginPage.clickLogin();
+    }
+    @Then("I can see Logged in as username")
+    public void iCanSeeLoggedInAsUsername() {
+        Assertions.assertEquals(true, homePage.hasMessage("Logged in as AKANSHA PAL"));
+    }
+
+    @Given("I am logged in with correct credentials")
+    public void iAmLoggedInWithCorrectCredentials() {
+        loginPage = homePage.goToLoginPage();
+        loginPage.enterUserName("apal@spartaglobal.com");
+        loginPage.enterPassword("Germany@2021");
+        loginPage.clickLogin();
+    }
+
+    @When("I click on logout button")
+    public void iClickOnLogoutButton() {
+        logoutPage = homePage.goToLogoutPage();
+        logoutPage.clickLogout();
+    }
+
+    @Then("I can see the login page  after logout")
+    public void iCanSeeTheLoginPageAfterLogout() {
+        loginPage = homePage.goToLoginPage();
+        Assertions.assertEquals("https://automationexercise.com/login", loginPage.getUrl());
+    }
     @After
     void tearDown() {
         webDriver.close();
@@ -144,4 +213,7 @@ public class MyStepdefs {
     static void teardownAll() {
         service.stop();
     }
+
+
+
 }

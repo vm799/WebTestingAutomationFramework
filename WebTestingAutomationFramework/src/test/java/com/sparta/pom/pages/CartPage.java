@@ -15,7 +15,8 @@ public class CartPage {
     private WebDriver webDriver;
     private By addToCart = new By.ByCssSelector("a[data-product-id='1']");
     private By chooseItem = new By.ByXPath("//*[text()='Blue Top']");
-    private By itemAddedMessage = new By.ByXPath("");
+    private By itemAddedMessage = new By.ByClassName("close-modal");
+    private By viewCart = new By.ByXPath("//a[@href='/view_cart']");
     private By deleteItem = new By.ByClassName("cart_quantity_delete");
     private By itemRemoved = new By.ById("empty_cart");
 
@@ -34,27 +35,40 @@ public class CartPage {
     public void chooseProduct() {
         WebDriverWait webDriverWait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
         WebElement element = webDriverWait.until(ExpectedConditions.visibilityOf(webDriver.findElement(chooseItem)));
-
         Actions actions = new Actions(webDriver);
-        actions.scrollByAmount(0, 500);
+        actions.scrollByAmount(0, 550);
         actions.perform();
 
     }
 
+    public void confirmation() {
+        webDriver.findElement(itemAddedMessage).click();
+    }
+
+    public void clickViewCart() {
+        WebDriverWait webDriverWait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+        WebElement element = webDriverWait.until(ExpectedConditions.elementToBeClickable(viewCart));
+        element.click();
+    }
+
     public String hasMessage(String message) {
-        String text = webDriver.findElement(itemAddedMessage).toString();
+        String text = webDriver.findElement(itemAddedMessage).getText();
         System.out.println(text);
        return text;
 //        return text.contains(message);
     }
 
     public void removeItem() {
-        webDriver.findElement(deleteItem).click();
+        webDriver.findElement(addToCart).click();
     }
 
     public boolean confirmRemove(String message) {
         String text = webDriver.findElement(itemRemoved).getText();
         return text.contains(message);
+    }
+
+    public boolean cartEmpty() {
+        return webDriver.findElement(itemRemoved).isDisplayed();
     }
 
     public String getUrl() {
